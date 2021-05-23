@@ -16,13 +16,15 @@ function createEle(ele, width, height) {
 }
 
 const container = createEle('div', 100, 500);
-
+let sI = 0;
 function addChildren(container) {
-  for (let i = 0; i < 10; i++) {
+  let i = sI;
+  for (; i < sI + 10; i++) {
     const childDiv = createEle('div', 100, 100);
     childDiv.innerText = i;
     container.appendChild(childDiv);
   }
+  sI = i;
 }
 
 addChildren(container);
@@ -33,11 +35,11 @@ appDiv.appendChild(container);
 container.addEventListener('scroll', e => {
   //consoleconsoleconsole.log(Math.floor(e.target.scrollTop), e.target.offsetHeight);
   const containerHeight = e.target.offsetHeight;
-  const containerScroll = e.target.scrollTop;
-  if (
-    containerScroll >= containerHeight - 1 &&
-    containerScroll <= containerHeight
-  ) {
+  const containerScroll = ~~(e.target.scrollTop);
+
+  const scrollDif = (containerScroll) - (sI*100 - 500);
+  //consoleconsole.log(containerScroll, scrollDif);
+  if (scrollDif >= -1 && scrollDif <= 0) {
     console.log('in');
     addChildren(e.target);
   }

@@ -49,6 +49,7 @@ container.addEventListener('scroll', e => {
     console.log('in');
     addChildren(e.target);
   }
+  console.log('colored', document.querySelectorAll('.bg-yellow').length);
 });
 
 function paintVisibleNodes(e) {
@@ -71,26 +72,37 @@ function paintVisibleNodes(e) {
     paintNodes(scrollHeight);
   }
   sP = scrollHeight;
+
   console.log(scrollHeight);
 }
 
 function paintNodes(start) {
   for (let i = start; i < start + 5; i++) {
     const node = document.getElementById(i);
-    node.style.background = 'lightyellow';
+    //node.style.background = 'lightyellow';
+    console.log(node.classList.contains('bg-yellow'));
+    if (!node.classList.contains('bg-yellow')) {
+      node.classList.add('bg-yellow');
+    }
   }
 }
 
 function dePaintNodes(start, end) {
   for (let i = start; i < end; i++) {
     const node = document.getElementById(i);
-    node.style.background = 'none';
+    if (node.classList.contains('bg-yellow')) {
+      node.classList.remove('bg-yellow');
+    }
+    //node.style.background = 'none';
   }
 }
 
 function dePaintNodesDown(start, end) {
   for (let i = start; i > end; i--) {
     const node = document.getElementById(i);
-    node.style.background = 'none';
+    if (node.classList.contains('bg-yellow')) {
+      node.classList.remove('bg-yellow');
+    }
+    //nodenode.style.background = 'none';
   }
 }

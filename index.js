@@ -6,52 +6,33 @@ const appDiv = document.getElementById('app');
 
 appDiv.innerHTML = `<h1>Virtual Scroller</h1>`;
 
-function createEle(ele, width, height) {
-  const newEle = document.createElement(ele);
-  newEle.style.width = width + 'px';
-  newEle.style.height = height + 'px';
-  newEle.style.background = 'lightgrey';
+let sI = 0, // startIndex - keeps track of nodes in the container
+  sP = 0; // last scroll Position - detects scroll direction
 
-  return newEle;
-}
-
-const container = createEle('div', 100, 500);
-let sI = 0,
-  direction = true;
-let sP = 0;
-
-function addChildren(container) {
-  let i = sI;
-  for (; i < sI + 10; i++) {
-    const childDiv = createEle('div', 100, 100);
-    childDiv.innerText = i;
-    childDiv.id = i;
-    container.appendChild(childDiv);
-  }
-  sI = i;
-}
+const container = createEle('div', 200, 500);
 
 addChildren(container);
 container.style.overflow = 'auto';
 
 appDiv.appendChild(container);
 
+// Scroll event listener
 container.addEventListener('scroll', e => {
-  //consoleconsoleconsole.log(Math.floor(e.target.scrollTop), e.target.offsetHeight);
   paintVisibleNodes(e);
 
   const containerHeight = e.target.offsetHeight;
   const containerScroll = ~~e.target.scrollTop;
 
   const scrollDif = containerScroll - (sI * 100 - containerHeight);
-  //consoleconsole.log(containerScroll, scrollDif);
+
+  // end of scrll get more data for container
   if (scrollDif >= -1 && scrollDif <= 0) {
-    console.log('in');
     addChildren(e.target);
   }
   console.log('colored', document.querySelectorAll('.bg-yellow').length);
 });
 
+// Paint function utilities
 function paintVisibleNodes(e) {
   const contHeight = e.target.offsetHeight;
   const nodeHeight = 100;
@@ -60,27 +41,23 @@ function paintVisibleNodes(e) {
   const scrollHeight = ~~(e.target.scrollTop / 100);
 
   if (sP < scrollHeight) {
-    if (sP && sP !== scrollHeight) {
+    if (sP !== scrollHeight) {
       dePaintNodes(sP, scrollHeight);
     }
-
-    paintNodes(scrollHeight);
   } else {
-    if (sP && sP !== scrollHeight) {
+    if (sP !== scrollHeight) {
       dePaintNodesDown(sP + 4, scrollHeight + 4);
     }
-    paintNodes(scrollHeight);
   }
+  paintNodes(scrollHeight);
   sP = scrollHeight;
 
-  console.log(scrollHeight);
+  // console.log(scrollHeight);
 }
 
 function paintNodes(start) {
   for (let i = start; i < start + 5; i++) {
     const node = document.getElementById(i);
-    //node.style.background = 'lightyellow';
-    console.log(node.classList.contains('bg-yellow'));
     if (!node.classList.contains('bg-yellow')) {
       node.classList.add('bg-yellow');
     }
@@ -93,7 +70,6 @@ function dePaintNodes(start, end) {
     if (node.classList.contains('bg-yellow')) {
       node.classList.remove('bg-yellow');
     }
-    //node.style.background = 'none';
   }
 }
 
@@ -103,6 +79,25 @@ function dePaintNodesDown(start, end) {
     if (node.classList.contains('bg-yellow')) {
       node.classList.remove('bg-yellow');
     }
-    //nodenode.style.background = 'none';
   }
+}
+
+// Element Creation
+function createEle(ele, width, height) {
+  const newEle = document.createElement(ele);
+  newEle.style.width = width + 'px';
+  newEle.style.height = height + 'px';
+
+  return newEle;
+}
+
+function addChildren(container) {
+  let i = sI;
+  for (; i < sI + 10; i++) {
+    const childDiv = createEle('div', 100, 100);
+    childDiv.innerText = i;
+    childDiv.id = i;
+    container.appendChild(childDiv);
+  }
+  sI = i;
 }
